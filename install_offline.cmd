@@ -6,6 +6,8 @@ if errorlevel 1 (
  pause
  exit /b 1
 )
+py -3.11 tools\verify_bundle.py
+if errorlevel 1 goto failed
 py -3.11 -m venv .venv
 if errorlevel 1 goto failed
 .venv\Scripts\python -m pip install --no-index --find-links wheels -r requirements-win-cpu.lock
