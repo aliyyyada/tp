@@ -1,3 +1,6 @@
-PyMuPDF==1.24.14
+# Common dependencies; for offline Windows CPU install use requirements-win-cpu.lock.
+easyocr==1.7.2
 numpy==1.26.4
 opencv-python-headless==4.10.0.84
+PyMuPDF==1.24.14
+openpyxl==3.1.5

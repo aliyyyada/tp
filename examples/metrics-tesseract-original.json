@@ -1,0 +1,599 @@
+{
+  "cer": 0.5962815405046481,
+  "wer": 1.1603053435114503,
+  "exact_cell_accuracy": 0.1506849315068493,
+  "char_errors": 449,
+  "reference_chars": 753,
+  "word_errors": 152,
+  "reference_words": 131,
+  "evaluated_cells": 73,
+  "predicted_cells": 75,
+  "reference_coverage": 0.9733333333333334,
+  "relaxed": false,
+  "cells": [
+    {
+      "key": "p1/o1/shop",
+      "char_errors": 3,
+      "chars": 4,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p1/o1/section",
+      "char_errors": 2,
+      "chars": 2,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p1/o1/number",
+      "char_errors": 1,
+      "chars": 3,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p1/o1/operation_code",
+      "char_errors": 3,
+      "chars": 10,
+      "word_errors": 2,
+      "words": 2,
+      "exact": false
+    },
+    {
+      "key": "p1/o1/content",
+      "char_errors": 84,
+      "chars": 115,
+      "word_errors": 16,
+      "words": 16,
+      "exact": false
+    },
+    {
+      "key": "p1/o1/worker_code",
+      "char_errors": 0,
+      "chars": 1,
+      "word_errors": 0,
+      "words": 1,
+      "exact": true
+    },
+    {
+      "key": "p1/o1/worker_grade",
+      "char_errors": 1,
+      "chars": 1,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p1/o1/simultaneous_parts",
+      "char_errors": 0,
+      "chars": 4,
+      "word_errors": 0,
+      "words": 1,
+      "exact": true
+    },
+    {
+      "key": "p1/o1/normalization_unit",
+      "char_errors": 0,
+      "chars": 3,
+      "word_errors": 0,
+      "words": 1,
+      "exact": true
+    },
+    {
+      "key": "p1/o1/batch_size",
+      "char_errors": 1,
+      "chars": 1,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p1/o1/piece_time",
+      "char_errors": 1,
+      "chars": 3,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p1/o1/resource_1",
+      "char_errors": 14,
+      "chars": 21,
+      "word_errors": 5,
+      "words": 3,
+      "exact": false
+    },
+    {
+      "key": "p1/o1/resource_2",
+      "char_errors": 16,
+      "chars": 18,
+      "word_errors": 4,
+      "words": 2,
+      "exact": false
+    },
+    {
+      "key": "p1/o1/document_1",
+      "char_errors": 2,
+      "chars": 11,
+      "word_errors": 2,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p1/o1/document_2",
+      "char_errors": 4,
+      "chars": 13,
+      "word_errors": 3,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p2/o1/resource_1",
+      "char_errors": 16,
+      "chars": 24,
+      "word_errors": 5,
+      "words": 3,
+      "exact": false
+    },
+    {
+      "key": "p2/o1/document_1",
+      "char_errors": 7,
+      "chars": 13,
+      "word_errors": 4,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p2/o1/document_2",
+      "char_errors": 10,
+      "chars": 19,
+      "word_errors": 4,
+      "words": 3,
+      "exact": false
+    },
+    {
+      "key": "p2/o2/worker_code",
+      "char_errors": 2,
+      "chars": 1,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p2/o2/worker_grade",
+      "char_errors": 3,
+      "chars": 1,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p2/o2/simultaneous_parts",
+      "char_errors": 0,
+      "chars": 4,
+      "word_errors": 0,
+      "words": 1,
+      "exact": true
+    },
+    {
+      "key": "p2/o2/normalization_unit",
+      "char_errors": 3,
+      "chars": 3,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p2/o2/batch_size",
+      "char_errors": 2,
+      "chars": 1,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p2/o2/piece_time",
+      "char_errors": 2,
+      "chars": 4,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p2/o2/resource_1",
+      "char_errors": 9,
+      "chars": 14,
+      "word_errors": 2,
+      "words": 2,
+      "exact": false
+    },
+    {
+      "key": "p2/o2/inventory_1",
+      "char_errors": 5,
+      "chars": 9,
+      "word_errors": 3,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p2/o2/document_1",
+      "char_errors": 3,
+      "chars": 11,
+      "word_errors": 2,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/shop",
+      "char_errors": 4,
+      "chars": 4,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/section",
+      "char_errors": 2,
+      "chars": 2,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/number",
+      "char_errors": 3,
+      "chars": 3,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/operation_code",
+      "char_errors": 3,
+      "chars": 4,
+      "word_errors": 2,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/content",
+      "char_errors": 18,
+      "chars": 45,
+      "word_errors": 8,
+      "words": 7,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/worker_code",
+      "char_errors": 0,
+      "chars": 1,
+      "word_errors": 0,
+      "words": 1,
+      "exact": true
+    },
+    {
+      "key": "p3/o1/worker_grade",
+      "char_errors": 1,
+      "chars": 1,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/simultaneous_parts",
+      "char_errors": 2,
+      "chars": 2,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/normalization_unit",
+      "char_errors": 1,
+      "chars": 1,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/piece_time",
+      "char_errors": 6,
+      "chars": 6,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/resource_1",
+      "char_errors": 8,
+      "chars": 13,
+      "word_errors": 2,
+      "words": 2,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/inventory_1",
+      "char_errors": 0,
+      "chars": 8,
+      "word_errors": 0,
+      "words": 1,
+      "exact": true
+    },
+    {
+      "key": "p3/o1/document_1",
+      "char_errors": 1,
+      "chars": 5,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o1/document_2",
+      "char_errors": 0,
+      "chars": 6,
+      "word_errors": 0,
+      "words": 1,
+      "exact": true
+    },
+    {
+      "key": "p3/o2/shop",
+      "char_errors": 4,
+      "chars": 4,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/section",
+      "char_errors": 2,
+      "chars": 2,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/number",
+      "char_errors": 1,
+      "chars": 3,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/operation_code",
+      "char_errors": 3,
+      "chars": 4,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/content",
+      "char_errors": 42,
+      "chars": 88,
+      "word_errors": 13,
+      "words": 14,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/worker_code",
+      "char_errors": 1,
+      "chars": 1,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/worker_grade",
+      "char_errors": 4,
+      "chars": 1,
+      "word_errors": 2,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/simultaneous_parts",
+      "char_errors": 0,
+      "chars": 4,
+      "word_errors": 0,
+      "words": 1,
+      "exact": true
+    },
+    {
+      "key": "p3/o2/normalization_unit",
+      "char_errors": 2,
+      "chars": 3,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/batch_size",
+      "char_errors": 1,
+      "chars": 1,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/piece_time",
+      "char_errors": 3,
+      "chars": 3,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/resource_1",
+      "char_errors": 12,
+      "chars": 20,
+      "word_errors": 6,
+      "words": 3,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/resource_2",
+      "char_errors": 12,
+      "chars": 18,
+      "word_errors": 4,
+      "words": 2,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/document_1",
+      "char_errors": 4,
+      "chars": 11,
+      "word_errors": 2,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p3/o2/document_2",
+      "char_errors": 9,
+      "chars": 13,
+      "word_errors": 2,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p4/o1/resource_1",
+      "char_errors": 19,
+      "chars": 24,
+      "word_errors": 3,
+      "words": 3,
+      "exact": false
+    },
+    {
+      "key": "p4/o1/document_1",
+      "char_errors": 5,
+      "chars": 13,
+      "word_errors": 3,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p4/o1/document_2",
+      "char_errors": 18,
+      "chars": 19,
+      "word_errors": 6,
+      "words": 3,
+      "exact": false
+    },
+    {
+      "key": "p4/o2/shop",
+      "char_errors": 4,
+      "chars": 4,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p4/o2/section",
+      "char_errors": 2,
+      "chars": 2,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p4/o2/number",
+      "char_errors": 3,
+      "chars": 3,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p4/o2/operation_code",
+      "char_errors": 0,
+      "chars": 4,
+      "word_errors": 0,
+      "words": 1,
+      "exact": true
+    },
+    {
+      "key": "p4/o2/content",
+      "char_errors": 20,
+      "chars": 49,
+      "word_errors": 6,
+      "words": 7,
+      "exact": false
+    },
+    {
+      "key": "p4/o2/worker_code",
+      "char_errors": 0,
+      "chars": 1,
+      "word_errors": 0,
+      "words": 1,
+      "exact": true
+    },
+    {
+      "key": "p4/o2/worker_grade",
+      "char_errors": 1,
+      "chars": 1,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p4/o2/simultaneous_parts",
+      "char_errors": 0,
+      "chars": 4,
+      "word_errors": 0,
+      "words": 1,
+      "exact": true
+    },
+    {
+      "key": "p4/o2/normalization_unit",
+      "char_errors": 3,
+      "chars": 1,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p4/o2/piece_time",
+      "char_errors": 5,
+      "chars": 5,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p4/o2/resource_1",
+      "char_errors": 16,
+      "chars": 13,
+      "word_errors": 3,
+      "words": 2,
+      "exact": false
+    },
+    {
+      "key": "p4/o2/inventory_1",
+      "char_errors": 3,
+      "chars": 8,
+      "word_errors": 3,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p4/o2/document_1",
+      "char_errors": 5,
+      "chars": 5,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    },
+    {
+      "key": "p4/o2/document_2",
+      "char_errors": 2,
+      "chars": 6,
+      "word_errors": 1,
+      "words": 1,
+      "exact": false
+    }
+  ]
+}

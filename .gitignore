@@ -5,3 +5,10 @@ wheels/
 installers/
 tessdata/
 *.pdf
+offline-build/
+gpu-wheels/
+models/
+reports/
+*.zip
+
+examples/primer-reference.json
