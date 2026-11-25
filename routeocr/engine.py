@@ -51,6 +51,7 @@ class EasyEngine:
                                          batch_size=1,workers=0,min_size=3,allowlist=alphabet)
         words=[]
         for polygon,text,confidence in entries:
+            if not text.strip():continue
             xs=[float(p[0]) for p in polygon];ys=[float(p[1]) for p in polygon]
             words.append(dict(text=text,confidence=float(confidence),bbox=[min(xs),min(ys),max(xs),max(ys)]))
         # Group by baseline; multiline cells retain explicit newlines.

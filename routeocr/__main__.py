@@ -35,11 +35,16 @@ def preview(args):
 
 def export(tables,out):
     import openpyxl
-    validate_relations(tables);dump(out/'result.json',tables)
+    from .schema import public_tables,COLUMNS
+    audit=tables
+    tables=public_tables(audit)
+    dump(out/'result.json',tables)
+    dump(out/'ocr_audit.json',audit)
+    dump(out/'review.json',audit['review'])
     wb=openpyxl.Workbook();wb.remove(wb.active)
     for name,rows in tables.items():
         # Preserve schema even on an empty relation sheet.
-        columns=list(dict.fromkeys(k for row in rows for k in row)) or ['id']
+        columns=COLUMNS[name]
         def value(x):return json.dumps(x,ensure_ascii=False) if isinstance(x,(dict,list)) else x
         with (out/(name+'.csv')).open('w',encoding='utf-8-sig',newline='') as f:
             writer=csv.writer(f);writer.writerow(columns)
@@ -53,6 +58,15 @@ def export(tables,out):
         ws.freeze_panes='A2';ws.auto_filter.ref=ws.dimensions
     wb.save(out/'tables.xlsx')
 
+def reexport(args):
+    data=load(args.input)
+    out=Path(args.output)
+    if out.exists() and any(out.iterdir()):raise ValueError('Output must be new/empty')
+    out.mkdir(parents=True,exist_ok=True)
+    export(data,out)
+    print('Converted legacy OCR audit to three entities:',out)
+
+
 def ocr(args):
     import cv2
     from .image import rectify,crop_variant
@@ -65,12 +79,13 @@ def ocr(args):
     engine=EasyEngine(args.models,args.gpu) if args.engine=='easyocr' else TesseractEngine(args.models,args.tesseract)
     tables=empty_tables();pid=args.process_id
     tables['processes'].append(dict(id=pid,document_number=args.document_number or '',source=Path(args.pdf).name,number_source='user_supplied' if args.document_number else 'not_set',needs_review=True))
+    ink=dict(min_contrast=args.ink_min_contrast,min_saturation=args.ink_min_saturation,max_value=args.ink_max_value,hue=args.ink_hue) if args.ink_filter else None
     evidence=[]
     for page in template['pages']:
         n=page['page'];im=rectify(render(args.pdf,n,args.dpi),page)
         cv2.imwrite(str(out/f'page_{n:03d}_rectified.png'),im)
         if page.get('process_number_box') and not args.document_number:
-            crop,bbox=crop_variant(im,page['process_number_box'],args.variant)
+            crop,bbox=crop_variant(im,page['process_number_box'],args.variant,ink)
             cv2.imwrite(str(out/'crops'/'process_document_number.png'),crop)
             header=engine.read(crop,False,fieldname='document_number')
             header.update(key='process/document_number',crop='crops/process_document_number.png',bbox=bbox,reviewed=False)
@@ -78,10 +93,12 @@ def ocr(args):
             tables['processes'][0].update(document_number=header['text'],number_source='header_ocr_candidate',raw_number=header)
         for index,row in enumerate(page['rows'],1):
             def read(name,box):
-                crop,bbox=crop_variant(im,box,args.variant)
+                raw,_=crop_variant(im,box,'original')
+                crop,bbox=crop_variant(im,box,args.variant,ink)
                 fname=f'p{n:03d}_o{index:03d}_{name}.png';cv2.imwrite(str(out/'crops'/fname),crop)
+                cv2.imwrite(str(out/'crops'/('raw_'+fname)),raw)
                 cell=engine.read(crop,name in NUMERIC,fieldname=name)
-                cell.update(crop='crops/'+fname,bbox=bbox,variant=args.variant,word_coordinate_system='crop pixels incl 12px padding',reviewed=False)
+                cell.update(crop='crops/'+fname,bbox=bbox,variant=args.variant,ink_filter=ink,raw_crop='crops/raw_'+fname,word_coordinate_system='crop pixels incl 12px padding',reviewed=False)
                 evidence.append(dict(key=f'p{n}/o{index}/{name}',**cell))
                 return cell
             cells={name:read(name,box) for name,box in row['cells'].items()}
@@ -96,7 +113,7 @@ def ocr(args):
             add_operation(tables,pid,n,index,cells,resources,docs,args.threshold,row.get('continuation_of'))
             print(f'Page {n}, operation band {index}',flush=True)
     export(tables,out);dump(out/'cells.json',evidence)
-    dump(out/'run.json',dict(engine=args.engine,variant=args.variant,dpi=args.dpi,gpu=args.gpu,template=template,
+    dump(out/'run.json',dict(engine=args.engine,variant=args.variant,dpi=args.dpi,gpu=args.gpu,ink_filter=ink,template=template,
                              note='Every operation requires review; OCR confidence is not accuracy.'))
     dump(out/'reference.template.json',[dict(key=c['key'],text='',verified=False) for c in evidence])
 
@@ -117,7 +134,16 @@ def evaluate(args):
     report=dict(cer=ce/chars if chars else None,wer=we/words if words else None,exact_cell_accuracy=sum(r['exact'] for r in rows)/len(rows),
                 char_errors=ce,reference_chars=chars,word_errors=we,reference_words=words,evaluated_cells=len(rows),predicted_cells=len(pred),
                 reference_coverage=len(rows)/len(pred) if pred else 0,relaxed=args.relaxed,cells=rows)
+    report['target_exact_cell_accuracy']=args.target_exact if hasattr(args,'target_exact') else .9
+    report['target_met']=report['exact_cell_accuracy']>report['target_exact_cell_accuracy']
     dump(args.output,report);print(json.dumps({k:v for k,v in report.items() if k!='cells'},ensure_ascii=False,indent=2))
+
+def digit(args):
+    import cv2
+    from .digits import load_weights,classify_digit
+    result=classify_digit(cv2.imread(args.image),load_weights(args.weights))
+    dump(args.output,result);print(json.dumps(result,ensure_ascii=False,indent=2))
+
 
 def main():
     p=argparse.ArgumentParser(description='Offline route-card cells OCR and relational export')
@@ -127,8 +153,11 @@ def main():
         if name=='ocr':
             a.add_argument('--process-id',required=True);a.add_argument('--document-number',help='Verified document number; otherwise template header OCR candidate');a.add_argument('--models',default='models');a.add_argument('--engine',choices=['easyocr','tesseract'],default='easyocr')
             a.add_argument('--tesseract',default='tesseract');a.add_argument('--gpu',action='store_true');a.add_argument('--accept-template',action='store_true')
+            a.add_argument('--ink-filter',action='store_true');a.add_argument('--ink-min-contrast',type=int,default=18);a.add_argument('--ink-min-saturation',type=int,default=0);a.add_argument('--ink-max-value',type=int,default=255);a.add_argument('--ink-hue',type=int,nargs=2)
             a.add_argument('--variant',choices=['original','gray','clahe','binary'],default='original');a.add_argument('--threshold',type=float,default=.65)
-    a=sub.add_parser('evaluate');a.add_argument('prediction');a.add_argument('reference');a.add_argument('-o','--output',default='metrics.json');a.add_argument('--relaxed',action='store_true');a.set_defaults(func=evaluate)
+    a=sub.add_parser('digit');a.add_argument('image');a.add_argument('--weights',required=True);a.add_argument('-o','--output',default='digit-candidate.json');a.set_defaults(func=digit)
+    a=sub.add_parser('reexport');a.add_argument('input',help='Legacy result.json or new ocr_audit.json');a.add_argument('-o','--output',required=True);a.set_defaults(func=reexport)
+    a=sub.add_parser('evaluate');a.add_argument('prediction');a.add_argument('reference');a.add_argument('-o','--output',default='metrics.json');a.add_argument('--relaxed',action='store_true');a.add_argument('--target-exact',type=float,default=.9);a.set_defaults(func=evaluate)
     args=p.parse_args()
     try:args.func(args)
     except (ValueError,OSError,KeyError) as e:p.exit(1,f'Error: {e}\n')

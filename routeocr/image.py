@@ -22,9 +22,10 @@ def rectify(image,page):
     target=np.float32([[0,0],[width-1,0],[width-1,height-1],[0,height-1]])
     return cv2.warpPerspective(image,cv2.getPerspectiveTransform(corners,target),(width,height),borderValue=(255,255,255))
 
-def crop_variant(image,box,variant):
+def crop_variant(image,box,variant,ink=None):
     x1,y1,x2,y2=box_pixels(box,image.shape)
     crop=image[y1:y2,x1:x2].copy()
+    if ink is not None:crop,_=suppress_bleed(crop,**ink)
     if variant=='gray':crop=cv2.cvtColor(crop,cv2.COLOR_BGR2GRAY)
     elif variant=='clahe':
         lab=cv2.cvtColor(crop,cv2.COLOR_BGR2LAB);lab[:,:,0]=cv2.createCLAHE(2,(8,8)).apply(lab[:,:,0]);crop=cv2.cvtColor(lab,cv2.COLOR_LAB2BGR)
@@ -36,3 +37,28 @@ def crop_variant(image,box,variant):
     # No unconditional thresholding: preserve weak handwriting in original/CLAHE modes.
     crop=cv2.copyMakeBorder(crop,12,12,12,12,cv2.BORDER_CONSTANT,value=255 if crop.ndim==2 else (255,255,255))
     return crop,[x1,y1,x2,y2]
+
+
+def suppress_bleed(image,min_contrast=0,min_saturation=0,max_value=255,hue=None):
+    """Keep locally dark/color-selected ink BEFORE any contrast enhancement.
+
+    Cannot distinguish front/back marks with the same color and optical density.
+    Parameters are 0..255; OpenCV hue range is 0..179, inclusive, wrap allowed.
+    """
+    if not all(0<=v<=255 for v in (min_contrast,min_saturation,max_value)):
+        raise ValueError('Ink thresholds must be 0..255')
+    if hue is not None and (len(hue)!=2 or any(not 0<=x<=179 for x in hue)):
+        raise ValueError('Hue requires two values 0..179')
+    gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+    # Morphological closing fills narrow dark strokes to estimate local paper brightness.
+    size=max(15,int(min(image.shape[:2])*.12)|1)
+    background=cv2.morphologyEx(gray,cv2.MORPH_CLOSE,cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(size,size)))
+    contrast=background.astype(np.int16)-gray.astype(np.int16)
+    hsv=cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
+    keep=(contrast>=min_contrast)&(hsv[:,:,1]>=min_saturation)&(hsv[:,:,2]<=max_value)
+    if hue is not None:
+        lo,hi=hue
+        keep&=((hsv[:,:,0]>=lo)&(hsv[:,:,0]<=hi)) if lo<=hi else ((hsv[:,:,0]>=lo)|(hsv[:,:,0]<=hi))
+    result=image.copy();result[~keep]=255
+    return result,dict(min_contrast=min_contrast,min_saturation=min_saturation,max_value=max_value,hue=hue,
+                       retained_fraction=float(np.mean(keep)))
