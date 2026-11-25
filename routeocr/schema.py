@@ -16,10 +16,11 @@ def public_tables(audit):
         result['documents'].append({k:process.get(k,'') for k in COLUMNS['documents']})
     designations={d['id']:d['designation'] for d in audit['documents']}
     resources={r['id']:r for r in audit['resources']}
+    scopes={d['id']:d.get('scope','operation') for d in audit['documents']}
     for op in audit['operations']:
         oid=op['id']
         rids=[x['resource_id'] for x in audit['operation_resources'] if x['operation_id']==oid]
-        docs=[designations[x['document_id']] for x in audit['operation_documents'] if x['operation_id']==oid]
+        docs=[designations[x['document_id']] for x in audit['operation_documents'] if x['operation_id']==oid and scopes[x['document_id']]=='operation']
         row={k:op.get(k,'') for k in COLUMNS['operations']}
         row.update(document_id=op['process_id'],document='\n'.join(docs),equipment_ids=rids,
                    equipment='\n'.join(resources[r]['name'] for r in rids))
@@ -31,3 +32,16 @@ def public_tables(audit):
                 kind=r['kind'],name=r['name'],inventory_number=r.get('inventory_number',''),documents=linked,
                 needs_review=True))
     return result
+
+
+def apply_document_scopes(audit,template):
+    """Use explicit template metadata to migrate legacy audit files without re-OCR."""
+    scopes={}
+    for page in template['pages']:
+        for index,row in enumerate(page['rows'],1):
+            for i,item in enumerate(row.get('documents',[]),1):
+                scopes[f"/p{page['page']}b{index}d{i}"]=item.get('scope','operation')
+    for document in audit['documents']:
+        matches=[scope for suffix,scope in scopes.items() if document['id'].endswith(suffix)]
+        if len(matches)==1:document['scope']=matches[0]
+    return audit

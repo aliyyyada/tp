@@ -45,7 +45,7 @@ def add_operation(tables, process_id, page, index, cells, resources, documents, 
         tables['operation_resources'].append(dict(operation_id=oid,resource_id=rid))
     for i,item in enumerate(documents):
         did=f'{oid}/p{page}b{index}d{i+1}'
-        tables['documents'].append(dict(id=did,designation=item['cell']['text'],raw=item['cell'],inventory_evidence=item.get('inventory_evidence')))
+        tables['documents'].append(dict(id=did,designation=item['cell']['text'],scope=item.get('scope','operation'),raw=item['cell'],inventory_evidence=item.get('inventory_evidence')))
         tables['operation_documents'].append(dict(operation_id=oid,document_id=did))
         # Only explicit template links. Never pair resources/documents by OCR order.
         for resource_index in item.get('resource_indices',[]):

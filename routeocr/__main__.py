@@ -60,6 +60,9 @@ def export(tables,out):
 
 def reexport(args):
     data=load(args.input)
+    if args.template:
+        from .schema import apply_document_scopes
+        data=apply_document_scopes(data,load(args.template))
     out=Path(args.output)
     if out.exists() and any(out.iterdir()):raise ValueError('Output must be new/empty')
     out.mkdir(parents=True,exist_ok=True)
@@ -156,7 +159,7 @@ def main():
             a.add_argument('--ink-filter',action='store_true');a.add_argument('--ink-min-contrast',type=int,default=18);a.add_argument('--ink-min-saturation',type=int,default=0);a.add_argument('--ink-max-value',type=int,default=255);a.add_argument('--ink-hue',type=int,nargs=2)
             a.add_argument('--variant',choices=['original','gray','clahe','binary'],default='original');a.add_argument('--threshold',type=float,default=.65)
     a=sub.add_parser('digit');a.add_argument('image');a.add_argument('--weights',required=True);a.add_argument('-o','--output',default='digit-candidate.json');a.set_defaults(func=digit)
-    a=sub.add_parser('reexport');a.add_argument('input',help='Legacy result.json or new ocr_audit.json');a.add_argument('-o','--output',required=True);a.set_defaults(func=reexport)
+    a=sub.add_parser('reexport');a.add_argument('input',help='Legacy result.json or new ocr_audit.json');a.add_argument('--template',help='Explicit document scopes for legacy migration');a.add_argument('-o','--output',required=True);a.set_defaults(func=reexport)
     a=sub.add_parser('evaluate');a.add_argument('prediction');a.add_argument('reference');a.add_argument('-o','--output',default='metrics.json');a.add_argument('--relaxed',action='store_true');a.add_argument('--target-exact',type=float,default=.9);a.set_defaults(func=evaluate)
     args=p.parse_args()
     try:args.func(args)
